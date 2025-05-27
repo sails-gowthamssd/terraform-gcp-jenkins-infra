@@ -22,7 +22,7 @@ pipeline {
 
     stage('Terraform Init') {
       steps {
-        dir('infra') {
+        dir('gke-helloworld') {
           bat 'terraform init'
         }
       }
@@ -30,7 +30,7 @@ pipeline {
 
     stage('Terraform Plan') {
       steps {
-        dir('infra') {
+        dir('gke-helloworld') {
           bat 'terraform plan -var-file=terraform.tfvars'
         }
       }
@@ -39,7 +39,7 @@ pipeline {
     stage('Terraform Apply') {
       steps {
         input message: "Approve apply?"
-        dir('infra') {
+        dir('gke-helloworld') {
           bat 'terraform apply -auto-approve -var-file=terraform.tfvars'
         }
       }
