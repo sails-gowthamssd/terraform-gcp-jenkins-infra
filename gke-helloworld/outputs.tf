@@ -12,5 +12,5 @@ output "helm_service_account" {
 }
 
 output "artifact_repo_name" {
-  value = module.artifact_registry.repo_name
+  value = module.artifact_registry.repository_id
 }
