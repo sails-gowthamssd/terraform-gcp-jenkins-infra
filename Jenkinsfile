@@ -1,6 +1,10 @@
 pipeline {
   agent any
 
+  environment {
+    GOOGLE_APPLICATION_CREDENTIALS = "${WORKSPACE}\\terraform-sa.json"
+  }
+
   stages {
     stage('Checkout') {
       steps {
@@ -11,11 +15,7 @@ pipeline {
     stage('Prepare Credentials') {
       steps {
         withCredentials([file(credentialsId: 'TERRAFORM_SA_KEY', variable: 'TF_SA_KEY')]) {
-          sh '''
-            cp $TF_SA_KEY terraform-sa.json
-            export GOOGLE_APPLICATION_CREDENTIALS=$PWD/terraform-sa.json
-            terraform -version
-          '''
+          bat 'copy %TF_SA_KEY% terraform-sa.json'
         }
       }
     }
@@ -23,7 +23,7 @@ pipeline {
     stage('Terraform Init') {
       steps {
         dir('infra') {
-          sh 'terraform init'
+          bat 'terraform init'
         }
       }
     }
@@ -31,7 +31,7 @@ pipeline {
     stage('Terraform Plan') {
       steps {
         dir('infra') {
-          sh 'terraform plan -var-file=terraform.tfvars'
+          bat 'terraform plan -var-file=terraform.tfvars'
         }
       }
     }
@@ -40,7 +40,7 @@ pipeline {
       steps {
         input message: "Approve apply?"
         dir('infra') {
-          sh 'terraform apply -auto-approve -var-file=terraform.tfvars'
+          bat 'terraform apply -auto-approve -var-file=terraform.tfvars'
         }
       }
     }
@@ -48,7 +48,7 @@ pipeline {
 
   post {
     cleanup {
-      sh 'rm -f terraform-sa.json'
+      bat 'del terraform-sa.json'
     }
   }
 }
