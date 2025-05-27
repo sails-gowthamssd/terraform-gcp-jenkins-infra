@@ -8,7 +8,6 @@ variable "zone" {
 variable "cluster_name" {
   default = "hello-gke"
 }
-variable "gcp_credentials_file" {}
 variable "k8s_namespace" {
   type = string
 }

@@ -1,10 +1,6 @@
 pipeline {
   agent any
 
-  environment {
-    GOOGLE_APPLICATION_CREDENTIALS = "${WORKSPACE}/terraform-sa.json"
-  }
-
   stages {
     stage('Checkout') {
       steps {
@@ -15,7 +11,11 @@ pipeline {
     stage('Prepare Credentials') {
       steps {
         withCredentials([file(credentialsId: 'TERRAFORM_SA_KEY', variable: 'TF_SA_KEY')]) {
-          sh 'cp $TF_SA_KEY terraform-sa.json'
+          sh '''
+            cp $TF_SA_KEY terraform-sa.json
+            export GOOGLE_APPLICATION_CREDENTIALS=$PWD/terraform-sa.json
+            terraform -version
+          '''
         }
       }
     }
