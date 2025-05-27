@@ -1,0 +1,5 @@
+project_id   = "my-kubernetes-project-456905"
+zone       = "us-central1-b"
+cluster_name = "hello-jenkins-gke"
+region     = "us-central1"
+k8s_namespace     = "default"
