@@ -27,7 +27,7 @@ module "gke" {
 }
 
 module "service_accounts" {
-  source                  = "./modules/service_accounts"
+  source                  = "../modules/service_accounts"
   project_id              = var.project_id
   namespace               = var.k8s_namespace
   cluster_name            = var.cluster_name
