@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   parameters {
-    choice(name: 'ACTION', choices: ['apply', 'destroy'], description: 'Choose Terraform actions to perform')
+    choice(name: 'ACTION', choices: ['apply', 'destroy'], description: 'Choose Terraform actionss to perform')
   }
 
   environment {
