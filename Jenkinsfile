@@ -1,6 +1,10 @@
 pipeline {
   agent any
 
+  parameters {
+    choice(name: 'ACTION', choices: ['apply', 'destroy'], description: 'Choose Terraform action to perform')
+  }
+
   environment {
     GOOGLE_APPLICATION_CREDENTIALS = "${WORKSPACE}\\terraform-sa.json"
   }
@@ -31,16 +35,25 @@ pipeline {
     stage('Terraform Plan') {
       steps {
         dir('gke-helloworld') {
-          bat 'terraform plan -var-file=terraform.tfvars'
+          bat "terraform plan -var-file=terraform.tfvars"
         }
       }
     }
 
-    stage('Terraform Apply') {
+    stage('Terraform Apply or Destroy') {
       steps {
-        input message: "Approve apply?"
-        dir('gke-helloworld') {
-          bat 'terraform apply -auto-approve -var-file=terraform.tfvars'
+        script {
+          if (params.ACTION == 'apply') {
+            input message: "Approve apply?"
+            dir('gke-helloworld') {
+              bat "terraform apply -auto-approve -var-file=terraform.tfvars"
+            }
+          } else if (params.ACTION == 'destroy') {
+            input message: "Approve destroy?"
+            dir('gke-helloworld') {
+              bat "terraform destroy -auto-approve -var-file=terraform.tfvars"
+            }
+          }
         }
       }
     }
